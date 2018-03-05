@@ -1,0 +1,20 @@
+{
+    "name": "bbsinvest-sen-oomm",
+    "authors": [
+        {
+            "name": "bbsinvest",
+            "email": "bbsinvest@bbstvnet.com"
+        }
+    ],
+    
+    "autoload":{
+        "psr-4":{
+            "App\\":"app/"
+        }
+    },
+    
+    "require": {
+        "slim/slim": "^3.7",
+        "monolog/monolog": "^1.23"
+    }
+}
