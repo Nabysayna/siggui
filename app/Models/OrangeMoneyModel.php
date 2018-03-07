@@ -29,6 +29,28 @@ class OrangeMoneyModel {
 			   return $phone;
     }
 
+		public function getOMRequest($idReq,$numerordre){
+				$request = array("id" => 1,"Numerordre" => 2,"request" => "1*1","	iduser" => 1,  "daterequest" => "2018-03-05 03:25:00","Etat" => '1');
+
+				return $request;
+		}
+
+		public function setOMRequestById($id,$request){
+				$request = array("id" => 1,"Numerordre" => 2,"request" => "1*1","	iduser" => 1,  "daterequest" => "2018-03-05 03:25:00","Etat" => '1');
+
+				return $request;
+		}
+
+    public function setEtatOMRequest ($idReq,$numerordre,$etat){
+			   return ;
+		}
+
+		public function getNextRequest($phone,$requestId){
+ 				 $request = array("id" => 1,"Numerordre" => 2,"request" => "1*1","	iduser" => 1,  "daterequest" => "2018-03-05 03:25:00","Etat" => '1');
+
+				 return $request;
+		}
+
     public function getOMRequestByIdUser($idUser){
         $resp = array();
         return $resp;

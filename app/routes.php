@@ -26,5 +26,6 @@ $app->group('/orangeMoney', function () {
   // Transaction
    $this->post('/newtransationom', App\Controllers\OrangeMoneyController::class .':newTransationOM');
 	 $this->post('/annulertransationom', App\Controllers\OrangeMoneyController::class .':annulerTransationOM');
+	 $this->get('/nextransationomr/{pn}/{ok}', App\Controllers\OrangeMoneyController::class .':nextTransationOMR');
 
 });
