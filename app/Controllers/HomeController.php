@@ -17,5 +17,11 @@ class HomeController extends Controller {
         $this->_logger->addInfo("Fist Use");
         return $response->withJson(array("message", "WELCOME"));
     }
-    
+
+    public function test(Request $request, Response $response, $args){
+        header("Access-Control-Allow-Origin: *");
+        $this->_logger->addInfo("Fist Use");
+        return $response->write('G\'Optimus: Bonjour');    /* withJson(array("G'Optimus", "Naka ware")) */;
+    }
+
 }
