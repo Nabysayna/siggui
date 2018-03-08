@@ -35,14 +35,14 @@ class OrangeMoneyModel {
 				return $request;
 		}
 
-		public function setOMRequestById($id,$request){
-				$request = array("id" => 1,"Numerordre" => 2,"request" => "1*1","	iduser" => 1,  "daterequest" => "2018-03-05 03:25:00","Etat" => '1');
+		public function getPhoneOne (){
+			$phone = array("id" => 1,"Numerordre" => 2,"nextid" => 2,"lastid" => 2,  "NextOM" => array("id" => 2));
 
-				return $request;
+			return $phone;
 		}
 
     public function setEtatOMRequest ($idReq,$numerordre,$etat){
-			   return ;
+			   return 1;
 		}
 
 		public function getNextRequest($phone,$requestId){
@@ -51,26 +51,41 @@ class OrangeMoneyModel {
 				 return $request;
 		}
 
-    public function getOMRequestByIdUser($idUser){
-        $resp = array();
-        return $resp;
-    }
+		public function setPhoneStateToOff($numerordre,$phoneState, $request){
+				return 1;
+		}
 
-    public function getOMRequestByEtat($etat){
-        $resp = array();
-        return $resp;
-    }
+    public function getPhoneWhoRun(){
+				$phones = array(
+						array("id" => 1,"Numerordre" => 2,"nextid" => 2,"lastid" => 2,  "NextOM" => array("id" => 2)),
+						array("id" => 2,"Numerordre" => 2,"nextid" => 2,"lastid" => 2,  "NextOM" => array("id" => 3)),
+						array("id" => 3,"Numerordre" => 2,"nextid" => 2,"lastid" => 2,  "NextOM" => array("id" => 4)),
+						array("id" => 4,"Numerordre" => 2,"nextid" => 2,"lastid" => 2,  "NextOM" => array("id" => 5)),
+						array("id" => 5,"Numerordre" => 2,"nextid" => 2,"lastid" => 2,  "NextOM" => array("id" => 6)),
+						array("id" => 6,"Numerordre" => 2,"nextid" => 2,"lastid" => 2,  "NextOM" => array("id" => 7)),
+						array("id" => 7,"Numerordre" => 2,"nextid" => 2,"lastid" => 2,  "NextOM" => array("id" => 1)),
+				);
 
+				return $phones;
+		}
 
-    public function getOMRequestByNumerordre($num){
-        $resp = array();
-        return $resp;
-    }
+		public function getPhoneOffRequest($numerordre){
+				$request = array(
+						array("id" => 1,"Numerordre" => 2,"request" => "1*1","	iduser" => 1,  "daterequest" => "2018-03-05 03:25:00","Etat" => '1'),
+						array("id" => 2,"Numerordre" => 2,"request" => "1*1","	iduser" => 1,  "daterequest" => "2018-03-05 03:25:00","Etat" => '1'),
+						array("id" => 3,"Numerordre" => 2,"request" => "1*1","	iduser" => 1,  "daterequest" => "2018-03-05 03:25:00","Etat" => '1'),
+						array("id" => 4,"Numerordre" => 2,"request" => "1*1","	iduser" => 1,  "daterequest" => "2018-03-05 03:25:00","Etat" => '1'),
+						array("id" => 6,"Numerordre" => 2,"request" => "1*1","	iduser" => 1,  "daterequest" => "2018-03-05 03:25:00","Etat" => '1'),
+						array("id" => 7,"Numerordre" => 2,"request" => "1*1","	iduser" => 1,  "daterequest" => "2018-03-05 03:25:00","Etat" => '1'),
+						array("id" => 8,"Numerordre" => 2,"request" => "1*1","	iduser" => 1,  "daterequest" => "2018-03-05 03:25:00","Etat" => '1'),
+					);
 
-		public function getEtatOMRequest(){
-      	$resp = '-1';
-        return $resp;
-    }
+				return $request;
+		}
+
+		public function setOMRequestToOtherPhone($numerordre,$phone,$req){
+			 return 1;
+		}
 
 		public function estHabilite($correspSession, $montant, $concedant, $libelleoperation){
 
@@ -88,11 +103,6 @@ class OrangeMoneyModel {
 			  return $phone;
 		}
 
-		public function insertToken($token) {
-
-				return $token;
-		}
-
 		public function insertNewTransaction($numerordre , $nextPhoneId, $newNextPhone){
 
 		}
@@ -100,28 +110,5 @@ class OrangeMoneyModel {
 		public function omRequestEtat($phoneNumberOrder,  $resquestId){
           return '1';
 		}
-    //
-    //
-    // public function getCom($id){
-    //     $q = $this->_db->prepare('SELECT concat(u.prenom, " ", u.nom) AS agentcom FROM users u WHERE u.id_user=:id');
-    //     $q->execute(array(':id' => $id));
-    //     $customize = $q->fetch();
-    //     return $customize;
-    // }
-    //
-    //
-    // public function ajoutsuivipositionnement($point, $montant, $positionne_by, $recouvre_by){
-    //     $q = $this->_db->prepare('INSERT INTO suivipositionnements SET dateeffectif=NOW(), point=:point, montant=:montant, positionne_by=:positionne_by, recouvre_by=:recouvre_by, etatpositionnement=1');
-    //     $q->execute(array(':point' => $point, ':montant' => $montant, ':positionne_by' => $positionne_by, ':recouvre_by' => $recouvre_by));
-    //     return $this->_db->lastInsertId();
-    // }
-    //
-    //
-    //
-    //
-    // public function valideversementdepot($id, $montantversement, $idversement_by){
-    //     $q = $this->_db->prepare('UPDATE suivipositionnements SET etatversement=:etatversement, validverse_by=:validverse_by WHERE id=:id');
-    //     $q->execute(array(':id' => intval($id), ':etatversement' => $montantversement, ':validverse_by' => $idversement_by));
-    //     return $this->_db->lastInsertId();
-    // }
+
 }

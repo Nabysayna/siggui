@@ -18,54 +18,6 @@ class OrangeMoneyController extends Controller {
       return $response->withJson(array("message", "WELCOME"));
     }
 
-    // -------------------   OMRequest Table -------------------------
-
-    public function setOMRequest(Request $request, Response $response, $args){
-      header("Access-Control-Allow-Origin: *");
-      $data     = $request->getParsedBody();
-      $params   = json_decode($data['params']);
-
-      $omModel  =  new OrangeMoneyModel($this->db);
-      $resp     =  $omModel->getAllRequest();
-
-      return $response->withJson(array("params"=> $resp));
-    }
-
-    public function getOMRequest(Request $request, Response $response, $params){
-        header("Access-Control-Allow-Origin: *");
-
-        $data     = $request->getParsedBody();
-        $params   = json_decode($data['params']);
-
-        $omModel  =  new OrangeMoneyModel($this->db);
-        $resp     =  $omModel->getAllRequest();
-
-        return $response->withJson(array("params"=> $resp));
-    }
-
-    public function updateOMRequest(Request $request, Response $response, $args){
-          header("Access-Control-Allow-Origin: *");
-
-          $data     = $request->getParsedBody();
-          $params   = json_decode($data['params']);
-
-          $omModel  =  new OrangeMoneyModel($this->db);
-          $resp     =  $omModel->getAllRequest();
-
-          return $response->withJson(array("params"=> $resp));
-    }
-
-    public function deleteOMRequest(Request $request, Response $response, $args){
-          header("Access-Control-Allow-Origin: *");
-
-          $data     = $request->getParsedBody();
-          $params   = json_decode($data['params']);
-
-          $omModel  =  new OrangeMoneyModel($this->db);
-          $resp     =  $omModel->getAllRequest();
-
-          return $response->withJson(array("params"=> $resp));
-    }
 
     public function testEtatOMRequest(Request $request, Response $response, $args){
           header("Access-Control-Allow-Origin: *");
@@ -95,98 +47,6 @@ class OrangeMoneyController extends Controller {
           return $response->withJson(array("params"=> $resp));
 
     }
-
-    // -------------------   Scheduler-OM Table -------------------------
-
-
-    public function setNextOM(Request $request, Response $response, $args){
-          header("Access-Control-Allow-Origin: *");
-
-          $data     = $request->getParsedBody();
-          $params   = json_decode($data['params']);
-
-          $omModel  =  new OrangeMoneyModel($this->db);
-          $resp     =  $omModel->getAllRequest();
-
-          return $response->withJson(array("params"=> $resp));
-    }
-
-    public function setSoldeOM(Request $request, Response $response, $args){
-        header("Access-Control-Allow-Origin: *");
-
-        $data     = $request->getParsedBody();
-        $params   = json_decode($data['params']);
-
-        $omModel  =  new OrangeMoneyModel($this->db);
-        $resp     =  $omModel->getAllRequest();
-
-        return $response->withJson(array("params"=> $resp));
-    }
-
-    public function setEtatOM(Request $request, Response $response, $params){
-        header("Access-Control-Allow-Origin: *");
-
-        $data     = $request->getParsedBody();
-        $params   = json_decode($data['params']);
-
-        $omModel  =  new OrangeMoneyModel($this->db);
-        $resp     =  $omModel->getAllRequest();
-
-        return $response->withJson(array("params"=> $resp));
-    }
-
-    public function insertSchedulerOM(Request $request, Response $response, $args){
-          header("Access-Control-Allow-Origin: *");
-
-          $data     = $request->getParsedBody();
-          $params   = json_decode($data['params']);
-
-          $omModel  =  new OrangeMoneyModel($this->db);
-          $resp     =  $omModel->getAllRequest();
-
-          return $response->withJson(array("params"=> $resp));
-    }
-
-    //
-    // public function getNextOM(Request $request, Response $response, $args){
-    //       header("Access-Control-Allow-Origin: *");
-    //
-    //       $data     = $request->getParsedBody();
-    //       $params   = json_decode($data['params']);
-    //
-    //
-    //
-    //       $omModel  =  new OrangeMoneyModel($this->db);
-    //       $resp     =  $omModel->getAllRequest();
-    //
-    //       return $response->withJson(array("params"=> $resp));
-    // }
-
-    public function getSoldeOM(Request $request, Response $response, $args){
-        header("Access-Control-Allow-Origin: *");
-
-        $data     = $request->getParsedBody();
-        $params   = json_decode($data['params']);
-
-        $omModel  =  new OrangeMoneyModel($this->db);
-        $resp     =  $omModel->getAllRequest();
-
-        return $response->withJson(array("params"=> $resp));
-    }
-
-    public function getEtatOM(Request $request, Response $response, $params){
-        header("Access-Control-Allow-Origin: *");
-
-        $data     = $request->getParsedBody();
-        $params   = json_decode($data['params']);
-
-        $omModel  =  new OrangeMoneyModel($this->db);
-        $resp     =  $omModel->getAllRequest();
-
-        return $response->withJson(array("params"=> $resp));
-    }
-
-    // -------------------   Transations -------------------------
 
     // new transation
 
@@ -350,6 +210,89 @@ class OrangeMoneyController extends Controller {
            }
 
           return $response->withJson(array("Code"=> $code));
+    }
+
+    public function setPhoneStateOM (Request $request, Response $response, $args){
+          header("Access-Control-Allow-Origin: *");
+          $data   = $request->getParsedBody();
+          $params = json_decode($data['requestParam']);
+
+          $code = "0"; // the return
+
+          $numerordre = $params->numerordre; // number order from phone in phone's list
+          $phoneState = $params->etat;  // stat from phone off
+          $request    = $params->request; // request than phone runned before off
+
+          $omModel =  new OrangeMoneyModel($this->db);
+          // set state from the  phone where number order is $numerordre
+          $omModel->setPhoneStateToOff($numerordre,$phoneState, $request);
+          //test if last transactoin is succesful
+          $r = $omModef->getOMRequestByEtat($numerordre,"1");
+
+          if(!empty($r)){
+               $code = "ok";
+          }else{
+               $code = array("requete"=> $r);
+          }
+
+          // get the requests from the phone off
+          $phoneOffRequest = $omModel->getPhoneOffRequest($numerordre);
+          // get phone to be running
+          $runningPhones   = $omModel->getPhoneWhoRun();
+          // number of running phones
+          $phoneSize   =  sizeOf($runningPhones);
+          // number of requests from the phone off
+          $requestSize =  sizeOf($phoneOffRequest);
+
+          for($i = 0, $phoneIndex = 0; $i < $requestSize ; $i++){
+               for($j = $i; $j < ($i + ($requestSize/$phoneSize)) ; $j++){
+                      $phone =   $phoneIndex[$j]; // target phone
+                      $req   =    $phoneOffRequest[$j]; // target request
+                      /*
+                       *$numerordre => number order from phone off
+                       * $phone->Numerordre  => number order from  target phone
+                       * $req->id  => request id
+                      */
+                      $phoneOffRequest = $omModel->setOMRequestToOtherPhone($numerordre,$phone->Numerordre,$req->id);
+                      $code = "ok";
+
+               }
+               $phoneIndex++;
+               $i = $j;
+           }
+
+          return $response->withJson(array("Code"=> $code));
+
+    }
+
+    public function confirmerTransationOM(Request $request, Response $response, $args){
+        header("Access-Control-Allow-Origin: *");
+        $data   = $request->getParsedBody();
+        $params = json_decode($data['requestParam']);
+
+        $code = "0"; // the return
+
+        $numerordre = $params->numerordre; // number order from phone in phone's list
+        $requestState = $params->etat;  // stat from phone off
+        $request    = $params->request; // request than phone runned before off
+
+        $omModel =  new OrangeMoneyModel($this->db);
+
+        if(strcmp(trim($requestState), "success") == 0){
+            $omModel->setEtatOMRequest($idReq,$numerordre,"2");
+              $code = "ok";
+        }else{
+            $phoneOne= $omModel->getPhoneOne();
+            /*
+             *$numerordre => number order from phone off
+             * $phone->Numerordre  => number order from  target phone
+             * $req->id  => request id
+            */
+            $omModel->setOMRequestToOtherPhone($numerordre,$phoneOne->Numerordre,$request->id);
+            $code = "ok";
+        }
+
+        return $response->withJson(array("Code"=> $code));
     }
 
 }
