@@ -13,12 +13,19 @@ use \App\Models\OrangeMoneyModel;
 class OrangeMoneyController extends Controller {
 
   	public function test(Request $request, Response $response, $args){
-      header("Access-Control-Allow-Origin: *");
+          header("Access-Control-Allow-Origin: *");
+          $numerordre = 1;
+          $requete    = '77316/1/OM/1200';
+          $iduser     = 1;
+          $date       = date("Y-m-d H:i:s");
 
-      return $response->withJson(array("message", "WELCOME"));
+          $omModel  =  new OrangeMoneyModel($this->db);
+          $resp     =   $omModel->insertOMRequest($numerordre,$requete, $iduser, $date);
+
+          return $resp;
     }
 
-
+    // this function return
     public function testEtatOMRequest(Request $request, Response $response, $args){
           header("Access-Control-Allow-Origin: *");
 
@@ -64,31 +71,20 @@ class OrangeMoneyController extends Controller {
           $omModel =  new OrangeMoneyModel($this->db);
 
           //request autorization for the user transation
-          $statut  = $this->fullUseChecker($token, $request);
+          $statut  = $omModel->authorization($token, $motant);
           if (strcmp( trim($statut),"in" )==0 ){
-                  $lastPhone = $omModel->getPhoneByLastRequest();
-                          //
-
-                  $nextPhoneId  = $lastPhone["nextid"];
-                           //
-                  $phone        = $omModel->getOMRequestById($nextPhoneId);
-                          // phone infos
-                  $numerordre   = $phone["Numerordre"];
-                          //number order to phone
-                  $newNextPhone = $phone["NextOM"];
-                          //id users
+                  //request date
+                  $date       = date("Y-m-d H:i:s");
+                  //next phone
+                  $numerordre   = $getNextPhoneOne();
+                  //id users
                   $iduser = 1;
-                          // insertion new transation
-                  $omModel->insertNewTransaction($numerordre , $nextPhoneId, $newNextPhone);
-
-                  $idReq  = $omModel->insertOMRequest($numerordre,$requete, $iduser, $etat);
-
-                          //return numbre order to phone and request id
-                  $code   = $numerordre . "*". $idReq ;
-
+                  // insertion new transation
+                  $code  =   $omModel->insertOMRequest($numerordre,$request, $iduser, $date);
+                  //return numbre order to phone and request id
           }
 
-          return $response->withJson(array("requestParam"=> array("requete"=> $request,"token"=> $token) , "Code"=> $code));
+          return $code;
     }
 
     // authorization request a trabsation for this user
@@ -120,15 +116,15 @@ class OrangeMoneyController extends Controller {
 
 
           $omModel =  new OrangeMoneyModel($this->db);
-          $result  =  $omModel->authorizationUser($token);
+          //$result  =  $omModel->authorizationUser($token);
 
           if ( strpos($operation, "retrait")!==false || strpos($operation, "code")!==false )
                 $statut = "in" ;
           else if ( strcmp (gettype($result), 'boolean') !=0 ){
-              if ($omModel->estHabilite($result, $montant, "orangemoney", $operation )==1)
-                  $statut = "in" ;
+              if (($omModel->autorizationTran($token,$montan)== 1))
+                    $statut = "in" ;
               else
-                  $statut = "out" ;
+                    $statut = "out" ;
           }
           else
               $statut = "out" ;
@@ -157,7 +153,7 @@ class OrangeMoneyController extends Controller {
         $safeIdR =   $safeIdR['id'];
         // $etat    =  $omMode->omRequestEtat(phone,$requestId);
 
-        if($safeIdR){
+        if(!empty($safeIdR)){
               $safezone = $omModel->getNextRequest($phone,$safeIdR);
               if($safezone){
                   $omModel-> setOMRequestById($requestId,"0");

@@ -13,17 +13,23 @@ class OrangeMoneyModel {
 
 
     public function getAllRequest(){
-          $resp = array();
-          return array("response" => "db response");
+					$q  =  $this->_db->query("SELECT get_next_om() as nextone");
+					$resp = $q->fetch();
+          return $resp['nextone'];
     }
 
-		public function insertOMRequest($numerordre,$requete, $iduser, $etat){
-					$lastInsert = 1;
+		public function insertOMRequest($numerordre,$requete, $iduser, $date){
 
-					return $lastInsert;
+					$q  =  $this->_db->prepare("SELECT om_record_request(?,?,?,?) as nextone");
+
+					$q->execute(array($numerordre,$requete,$iduser,$date));
+
+					$resp = $q->fetch();
+
+					return $resp['nextone'];
 		}
 
-    public function getOMRequestById($id){
+    public function getOMPhoneById($id){
 			   $phone = array("id" => 1,"Numerordre" => 2,"nextid" => 2,"lastid" => 2,  "NextOM" => array("id" => 1));
 
 			   return $phone;
@@ -109,6 +115,16 @@ class OrangeMoneyModel {
 
 		public function omRequestEtat($phoneNumberOrder,  $resquestId){
           return '1';
+		}
+
+		public function autorizationTran($token,$montant){
+				$q  =  $this->_db->prepare("SELECT check_autorisation(?,?) as nextone");
+
+				$q->execute(array($token,$montant));
+
+				$resp = $q->fetch();
+
+				return $resp['nextone'];
 		}
 
 }
